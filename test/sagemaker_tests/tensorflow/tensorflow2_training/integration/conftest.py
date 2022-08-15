@@ -24,6 +24,10 @@ from sagemaker import LocalSession, Session
 from sagemaker.tensorflow import TensorFlow
 from ..integration import NO_P2_REGIONS, NO_P3_REGIONS, NO_P4_REGIONS, get_ecr_registry
 
+pytest_plugins = [
+    test.test_utils.refactor_fixture(fixture) for fixture in glob("test/fixtures/*.py") if "__" not in fixture
+]
+
 logger = logging.getLogger(__name__)
 logging.getLogger('boto').setLevel(logging.INFO)
 logging.getLogger('botocore').setLevel(logging.INFO)
@@ -69,24 +73,6 @@ def pytest_configure(config):
     os.environ['TEST_PY_VERSIONS'] = config.getoption('--py-version')
     os.environ['TEST_PROCESSORS'] = config.getoption('--processor')
     config.addinivalue_line("markers", "efa(): explicitly mark to run efa tests")
-
-
-# Nightly fixtures
-@pytest.fixture(scope="session")
-def feature_smdebug_present():
-    pass
-
-@pytest.fixture(scope="session")
-def feature_smddp_present():
-    pass
-
-@pytest.fixture(scope="session")
-def feature_smmp_present():
-    pass
-
-@pytest.fixture(scope="session")
-def feature_aws_framework_present():
-    pass
 
 
 @pytest.fixture(scope='session')

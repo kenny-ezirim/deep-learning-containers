@@ -21,6 +21,9 @@ import pytest
 from botocore.config import Config
 from botocore.exceptions import ClientError
 
+pytest_plugins = [
+    test.test_utils.refactor_fixture(fixture) for fixture in glob("test/fixtures/*.py") if "__" not in fixture
+]
 
 # these regions have some p2 and p3 instances, but not enough for automated testing
 NO_P2_REGIONS = [
@@ -123,12 +126,6 @@ def pytest_configure(config):
         os.environ["TEST_VERSIONS"] = config.getoption("--tag")
         os.environ["TEST_EI_VERSIONS"] = config.getoption("--tag")
     config.addinivalue_line("markers", "efa(): explicitly mark to run efa tests")
-
-
-# Nightly fixtures
-@pytest.fixture(scope="session")
-def feature_aws_framework_present():
-    pass
 
 
 @pytest.fixture(scope="session")

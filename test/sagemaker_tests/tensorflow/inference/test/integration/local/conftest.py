@@ -19,6 +19,9 @@ import pytest
 
 from botocore.exceptions import ClientError
 
+pytest_plugins = [
+    test.test_utils.refactor_fixture(fixture) for fixture in glob("test/fixtures/*.py") if "__" not in fixture
+]
 
 TFS_DOCKER_BASE_NAME = 'sagemaker-tensorflow-serving'
 
@@ -37,12 +40,6 @@ def pytest_collection_modifyitems(session, config, items):
         from test.test_utils.test_reporting import TestReportGenerator
         report_generator = TestReportGenerator(items, is_sagemaker=True)
         report_generator.generate_coverage_doc(framework="tensorflow", job_type="inference")
-
-
-# Nightly fixtures
-@pytest.fixture(scope="session")
-def feature_aws_framework_present():
-    pass
 
 
 @pytest.fixture(scope='module')

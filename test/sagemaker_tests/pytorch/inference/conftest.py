@@ -29,6 +29,10 @@ from sagemaker.pytorch import PyTorch
 
 from .utils import image_utils, get_ecr_registry
 
+pytest_plugins = [
+    test.test_utils.refactor_fixture(fixture) for fixture in glob("test/fixtures/*.py") if "__" not in fixture
+]
+
 logger = logging.getLogger(__name__)
 logging.getLogger('boto').setLevel(logging.INFO)
 logging.getLogger('boto3').setLevel(logging.INFO)
@@ -135,12 +139,6 @@ def pytest_collection_modifyitems(session, config, items):
         from test.test_utils.test_reporting import TestReportGenerator
         report_generator = TestReportGenerator(items, is_sagemaker=True)
         report_generator.generate_coverage_doc(framework="pytorch", job_type="inference")
-
-
-# Nightly fixtures
-@pytest.fixture(scope="session")
-def feature_aws_framework_present():
-    pass
 
 
 @pytest.fixture(scope='session', name='docker_base_name')

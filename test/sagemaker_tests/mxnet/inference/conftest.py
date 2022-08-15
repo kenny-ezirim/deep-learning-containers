@@ -26,6 +26,10 @@ from packaging.version import Version, parse
 
 from .integration import NO_P2_REGIONS, NO_P3_REGIONS, NO_P4_REGIONS, get_ecr_registry
 
+pytest_plugins = [
+    test.test_utils.refactor_fixture(fixture) for fixture in glob("test/fixtures/*.py") if "__" not in fixture
+]
+
 logger = logging.getLogger(__name__)
 logging.getLogger('boto').setLevel(logging.INFO)
 logging.getLogger('botocore').setLevel(logging.INFO)
@@ -81,12 +85,6 @@ def pytest_generate_tests(metafunc):
     if 'processor' in metafunc.fixturenames:
         processor_params = metafunc.config.getoption('--processor').split(',')
         metafunc.parametrize('processor', processor_params, scope='session')
-
-
-# Nightly fixtures
-@pytest.fixture(scope="session")
-def feature_aws_framework_present():
-    pass
 
 
 @pytest.fixture(scope='session')

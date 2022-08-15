@@ -4,6 +4,7 @@ import logging
 import random
 import sys
 import re
+from glob import glob
 
 import boto3
 from botocore.exceptions import ClientError
@@ -25,6 +26,7 @@ from test.test_utils import (
     is_ec2_image,
     is_sagemaker_image,
     is_nightly_context,
+    refactor_fixture,
     DEFAULT_REGION,
     P3DN_REGION,
     UBUNTU_18_BASE_DLAMI_US_EAST_1,
@@ -36,6 +38,7 @@ from test.test_utils import (
     are_efa_tests_disabled,
     get_ecr_repo_name,
     UBUNTU_HOME_DIR,
+    NIGHTLY_FIXTURES,
 )
 from test.test_utils.imageutils import (
     are_image_labels_matched,
@@ -94,30 +97,9 @@ FRAMEWORK_FIXTURES = (
     "inference",
 )
 
-# Nightly image fixture dictionary, maps nightly fixtures to set of image labels
-NIGHTLY_FIXTURES = {
-    "feature_smdebug_present": {"aws_framework_installed", "aws_smdebug_installed"},
-    "feature_smddp_present": {"aws_framework_installed", "aws_smddp_installed"},
-    "feature_smmp_present": {"aws_smmp_installed"},
-    "feature_aws_framework_present": {"aws_framework_installed"}
-}
-
-# Nightly fixtures
-@pytest.fixture(scope="session")
-def feature_smdebug_present():
-    pass
-
-@pytest.fixture(scope="session")
-def feature_smddp_present():
-    pass
-
-@pytest.fixture(scope="session")
-def feature_smmp_present():
-    pass
-
-@pytest.fixture(scope="session")
-def feature_aws_framework_present():
-    pass
+pytest_plugins = [
+    refactor_fixture(fixture) for fixture in glob("test/fixtures/*.py") if "__" not in fixture
+]
 
 # Ignore container_tests collection, as they will be called separately from test functions
 collect_ignore = [os.path.join("container_tests")]

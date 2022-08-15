@@ -134,6 +134,15 @@ UPGRADE_ECR_REPO_NAME = "upgraded-image-ecr-scan-repo"
 ECR_SCAN_HELPER_BUCKET = f"""ecr-scan-helper-{boto3.client("sts", region_name=DEFAULT_REGION).get_caller_identity().get("Account")}"""
 ECR_SCAN_FAILURE_ROUTINE_LAMBDA = "ecr-scan-failure-routine-lambda"
 
+
+# Nightly image fixture dictionary, maps nightly fixtures to set of image labels
+NIGHTLY_FIXTURES = {
+    "feature_smdebug_present": {"aws_framework_installed", "aws_smdebug_installed"},
+    "feature_smddp_present": {"aws_framework_installed", "aws_smddp_installed"},
+    "feature_smmp_present": {"aws_smmp_installed"},
+    "feature_aws_framework_present": {"aws_framework_installed"}
+}
+
 class MissingPythonVersionException(Exception):
     """
     When the Python Version is missing from an image_uri where it is expected to exist
@@ -1765,3 +1774,7 @@ def get_labels_from_ecr_image(image_uri, region):
     labels = image_metadata["config"]["Labels"]
 
     return labels
+
+
+def refactor(string: str) -> str:
+    return string.replace("/", ".").replace("\\", ".").replace(".py", "")
