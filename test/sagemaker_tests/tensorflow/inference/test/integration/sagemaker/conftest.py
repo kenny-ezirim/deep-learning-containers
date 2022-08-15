@@ -18,6 +18,7 @@ import time
 import boto3
 import pytest
 
+from glob import glob
 from botocore.config import Config
 from botocore.exceptions import ClientError
 

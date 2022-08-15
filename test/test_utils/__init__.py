@@ -1776,5 +1776,5 @@ def get_labels_from_ecr_image(image_uri, region):
     return labels
 
 
-def refactor(string: str) -> str:
+def refactor_fixture(string: str) -> str:
     return string.replace("/", ".").replace("\\", ".").replace(".py", "")

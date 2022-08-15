@@ -46,6 +46,10 @@ from test.test_utils.imageutils import (
 )
 from test.test_utils.test_reporting import TestReportGenerator
 
+pytest_plugins = [
+    refactor_fixture(fixture) for fixture in glob("test/fixtures/*.py") if "__" not in fixture
+]
+
 LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(logging.INFO)
 LOGGER.addHandler(logging.StreamHandler(sys.stderr))
@@ -97,9 +101,6 @@ FRAMEWORK_FIXTURES = (
     "inference",
 )
 
-pytest_plugins = [
-    refactor_fixture(fixture) for fixture in glob("test/fixtures/*.py") if "__" not in fixture
-]
 
 # Ignore container_tests collection, as they will be called separately from test functions
 collect_ignore = [os.path.join("container_tests")]

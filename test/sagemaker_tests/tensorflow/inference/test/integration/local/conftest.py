@@ -17,6 +17,7 @@ import os
 import boto3
 import pytest
 
+from glob import glob
 from botocore.exceptions import ClientError
 
 pytest_plugins = [
